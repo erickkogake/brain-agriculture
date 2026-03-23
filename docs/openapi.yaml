@@ -1,0 +1,638 @@
+openapi: 3.0.3
+info:
+  title: Brain Agriculture API
+  description: |
+    API REST para gerenciamento de produtores rurais.
+
+    ## Funcionalidades
+    - Cadastro, edição e exclusão de produtores rurais com CPF/CNPJ
+    - Gerenciamento de fazendas com validação de áreas
+    - Gerenciamento de safras por fazenda
+    - Registro de culturas plantadas por safra
+    - Dashboard com estatísticas e métricas
+  version: 1.0.0
+  contact:
+    name: Brain Agriculture
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Desenvolvimento local
+tags:
+  - name: producers
+    description: Gerenciamento de produtores rurais
+  - name: farms
+    description: Gerenciamento de fazendas
+  - name: harvests
+    description: Gerenciamento de safras
+  - name: crops
+    description: Gerenciamento de culturas plantadas
+  - name: dashboard
+    description: Dashboard e estatísticas
+
+paths:
+  /producers:
+    get:
+      tags: [producers]
+      summary: Listar todos os produtores
+      responses:
+        '200':
+          description: Lista de produtores com fazendas, safras e culturas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseProducerList'
+    post:
+      tags: [producers]
+      summary: Criar produtor rural
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProducerDto'
+            example:
+              document: "529.982.247-25"
+              name: "João Carlos da Silva"
+      responses:
+        '201':
+          description: Produtor criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseProducer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /producers/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags: [producers]
+      summary: Buscar produtor por ID
+      responses:
+        '200':
+          description: Produtor encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseProducer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [producers]
+      summary: Atualizar produtor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProducerDto'
+      responses:
+        '200':
+          description: Produtor atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseProducer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    delete:
+      tags: [producers]
+      summary: Excluir produtor
+      responses:
+        '204':
+          description: Produtor excluído com sucesso
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /farms:
+    get:
+      tags: [farms]
+      summary: Listar fazendas
+      parameters:
+        - name: producerId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Filtrar por produtor
+      responses:
+        '200':
+          description: Lista de fazendas
+    post:
+      tags: [farms]
+      summary: Criar fazenda
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFarmDto'
+            example:
+              producerId: "uuid-do-produtor"
+              name: "Fazenda Santa Maria"
+              city: "Ribeirão Preto"
+              state: "SP"
+              totalArea: 1000
+              arableArea: 600
+              vegetationArea: 300
+      responses:
+        '201':
+          description: Fazenda criada
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /farms/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags: [farms]
+      summary: Buscar fazenda por ID
+      responses:
+        '200':
+          description: Fazenda encontrada
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [farms]
+      summary: Atualizar fazenda
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFarmDto'
+      responses:
+        '200':
+          description: Fazenda atualizada
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [farms]
+      summary: Excluir fazenda
+      responses:
+        '204':
+          description: Fazenda excluída
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /harvests:
+    get:
+      tags: [harvests]
+      summary: Listar safras
+      parameters:
+        - name: farmId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de safras
+    post:
+      tags: [harvests]
+      summary: Criar safra
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHarvestDto'
+            example:
+              farmId: "uuid-da-fazenda"
+              name: "Safra 2024"
+              year: 2024
+      responses:
+        '201':
+          description: Safra criada
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /harvests/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags: [harvests]
+      summary: Buscar safra por ID
+      responses:
+        '200':
+          description: Safra encontrada
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [harvests]
+      summary: Atualizar safra
+      responses:
+        '200':
+          description: Safra atualizada
+    delete:
+      tags: [harvests]
+      summary: Excluir safra
+      responses:
+        '204':
+          description: Safra excluída
+
+  /crops:
+    get:
+      tags: [crops]
+      summary: Listar culturas
+      parameters:
+        - name: harvestId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de culturas
+    post:
+      tags: [crops]
+      summary: Registrar cultura plantada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCropDto'
+            example:
+              harvestId: "uuid-da-safra"
+              type: "Soja"
+              plantedArea: 500
+      responses:
+        '201':
+          description: Cultura registrada
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /crops/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags: [crops]
+      summary: Buscar cultura por ID
+      responses:
+        '200':
+          description: Cultura encontrada
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [crops]
+      summary: Atualizar cultura
+      responses:
+        '200':
+          description: Cultura atualizada
+    delete:
+      tags: [crops]
+      summary: Excluir cultura
+      responses:
+        '204':
+          description: Cultura excluída
+
+  /dashboard:
+    get:
+      tags: [dashboard]
+      summary: Obter estatísticas do dashboard
+      description: |
+        Retorna métricas agregadas incluindo:
+        - Total de produtores, fazendas e hectares
+        - Distribuição de fazendas por estado
+        - Distribuição de culturas plantadas
+        - Uso do solo (agricultável vs vegetação)
+      responses:
+        '200':
+          description: Estatísticas retornadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+              example:
+                success: true
+                data:
+                  overview:
+                    totalProducers: 6
+                    totalFarms: 11
+                    totalHectares: 25600
+                  byState:
+                    - label: "SP"
+                      value: 3
+                      percentage: 27.3
+                    - label: "GO"
+                      value: 3
+                      percentage: 27.3
+                  byCrop:
+                    - label: "Soja"
+                      value: 18
+                      percentage: 54.5
+                  byLandUse:
+                    - label: "Área Agricultável"
+                      value: 17100
+                      percentage: 72.5
+                    - label: "Área de Vegetação"
+                      value: 6500
+                      percentage: 27.5
+                timestamp: "2024-01-01T00:00:00.000Z"
+
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: UUID do recurso
+
+  responses:
+    BadRequest:
+      description: Dados inválidos
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Recurso não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Conflito de dados (ex: documento já cadastrado)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    CreateProducerDto:
+      type: object
+      required: [document, name]
+      properties:
+        document:
+          type: string
+          description: CPF ou CNPJ (com ou sem formatação)
+          example: "529.982.247-25"
+        name:
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: "João Carlos da Silva"
+
+    UpdateProducerDto:
+      type: object
+      properties:
+        document:
+          type: string
+        name:
+          type: string
+
+    CreateFarmDto:
+      type: object
+      required: [producerId, name, city, state, totalArea, arableArea, vegetationArea]
+      properties:
+        producerId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Fazenda Santa Maria"
+        city:
+          type: string
+          example: "Ribeirão Preto"
+        state:
+          type: string
+          minLength: 2
+          maxLength: 2
+          example: "SP"
+        totalArea:
+          type: number
+          minimum: 0.01
+          example: 1000
+        arableArea:
+          type: number
+          minimum: 0
+          example: 600
+        vegetationArea:
+          type: number
+          minimum: 0
+          example: 300
+
+    UpdateFarmDto:
+      type: object
+      properties:
+        name:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        totalArea:
+          type: number
+        arableArea:
+          type: number
+        vegetationArea:
+          type: number
+
+    CreateHarvestDto:
+      type: object
+      required: [farmId, name, year]
+      properties:
+        farmId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Safra 2024"
+        year:
+          type: integer
+          minimum: 1900
+          maximum: 2100
+          example: 2024
+
+    CreateCropDto:
+      type: object
+      required: [harvestId, type]
+      properties:
+        harvestId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [Soja, Milho, Algodão, Café, "Cana de Açúcar", Trigo, Arroz, Feijão, Mandioca, Sorgo, Outros]
+        description:
+          type: string
+        plantedArea:
+          type: number
+          minimum: 0
+
+    PieChartItem:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: number
+        percentage:
+          type: number
+
+    DashboardResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            overview:
+              type: object
+              properties:
+                totalProducers:
+                  type: integer
+                totalFarms:
+                  type: integer
+                totalHectares:
+                  type: number
+            byState:
+              type: array
+              items:
+                $ref: '#/components/schemas/PieChartItem'
+            byCrop:
+              type: array
+              items:
+                $ref: '#/components/schemas/PieChartItem'
+            byLandUse:
+              type: array
+              items:
+                $ref: '#/components/schemas/PieChartItem'
+        timestamp:
+          type: string
+          format: date-time
+
+    ApiResponseProducer:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Producer'
+        timestamp:
+          type: string
+
+    ApiResponseProducerList:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Producer'
+        timestamp:
+          type: string
+
+    Producer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        document:
+          type: string
+        documentType:
+          type: string
+          enum: [CPF, CNPJ]
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        farms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Farm'
+
+    Farm:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        totalArea:
+          type: number
+        arableArea:
+          type: number
+        vegetationArea:
+          type: number
+        producerId:
+          type: string
+        harvests:
+          type: array
+          items:
+            $ref: '#/components/schemas/Harvest'
+
+    Harvest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        year:
+          type: integer
+        farmId:
+          type: string
+        crops:
+          type: array
+          items:
+            $ref: '#/components/schemas/Crop'
+
+    Crop:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        plantedArea:
+          type: number
+        harvestId:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        timestamp:
+          type: string
+        path:
+          type: string
+        method:
+          type: string
+        error:
+          type: string
+        message:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
