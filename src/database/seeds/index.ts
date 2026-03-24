@@ -26,10 +26,10 @@ async function seed() {
   const harvestRepo = dataSource.getRepository(Harvest);
   const cropRepo = dataSource.getRepository(Crop);
 
-  await cropRepo.delete({});
-  await harvestRepo.delete({});
-  await farmRepo.delete({});
-  await producerRepo.delete({});
+  await cropRepo.clear();
+  await harvestRepo.clear();
+  await farmRepo.clear();
+  await producerRepo.clear();
 
   const producers = await producerRepo.save([
     { document: '52998224725', documentType: DocumentType.CPF, name: 'João Carlos da Silva' },

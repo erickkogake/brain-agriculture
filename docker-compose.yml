@@ -17,6 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - brain_network
 
   api:
     build:
@@ -31,13 +33,15 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: brain_agriculture
-      LOG_LEVEL: info
+      LOG_LEVEL: warn
     ports:
       - '3000:3000'
     depends_on:
       postgres:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      - brain_network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -49,6 +53,12 @@ services:
       - '5050:80'
     depends_on:
       - postgres
+    networks:
+      - brain_network
+
+networks:
+  brain_network:
+    driver: bridge
 
 volumes:
   postgres_data:
