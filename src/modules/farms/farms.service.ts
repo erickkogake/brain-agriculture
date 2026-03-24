@@ -31,7 +31,7 @@ export class FarmsService {
   }
 
   async create(dto: CreateFarmDto): Promise<Farm> {
-    this.logger.info('Creating farm', { context: 'FarmsService', name: dto.name });
+    this.logger.log('Creating farm', { context: 'FarmsService', name: dto.name });
 
     await this.producersService.findOne(dto.producerId);
     this.assertAreasValid(dto.totalArea, dto.arableArea, dto.vegetationArea);
@@ -39,7 +39,7 @@ export class FarmsService {
     const farm = this.farmFactory.build(dto);
     const saved = await this.farmRepository.save(farm);
 
-    this.logger.info('Farm created', { context: 'FarmsService', id: saved.id });
+    this.logger.log('Farm created', { context: 'FarmsService', id: saved.id });
     return saved;
   }
 
@@ -61,7 +61,7 @@ export class FarmsService {
   }
 
   async update(id: string, dto: UpdateFarmDto): Promise<Farm> {
-    this.logger.info('Updating farm', { context: 'FarmsService', id });
+    this.logger.log('Updating farm', { context: 'FarmsService', id });
     const farm = await this.findOne(id);
 
     const newTotal = Number(dto.totalArea ?? farm.totalArea);
@@ -75,14 +75,14 @@ export class FarmsService {
     });
 
     const updated = await this.farmRepository.save(farm);
-    this.logger.info('Farm updated', { context: 'FarmsService', id });
+    this.logger.log('Farm updated', { context: 'FarmsService', id });
     return updated;
   }
 
   async remove(id: string): Promise<void> {
-    this.logger.info('Deleting farm', { context: 'FarmsService', id });
+    this.logger.log('Deleting farm', { context: 'FarmsService', id });
     const farm = await this.findOne(id);
     await this.farmRepository.remove(farm);
-    this.logger.info('Farm deleted', { context: 'FarmsService', id });
+    this.logger.log('Farm deleted', { context: 'FarmsService', id });
   }
 }

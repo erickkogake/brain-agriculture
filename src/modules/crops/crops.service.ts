@@ -16,14 +16,14 @@ export class CropsService {
   ) {}
 
   async create(dto: CreateCropDto): Promise<Crop> {
-    this.logger.info('Creating crop', { context: 'CropsService', type: dto.type });
+    this.logger.log('Creating crop', { context: 'CropsService', type: dto.type });
 
     await this.harvestsService.findOne(dto.harvestId);
 
     const crop = this.cropRepository.create(dto);
     const saved = await this.cropRepository.save(crop);
 
-    this.logger.info('Crop created', { context: 'CropsService', id: saved.id });
+    this.logger.log('Crop created', { context: 'CropsService', id: saved.id });
     return saved;
   }
 
@@ -45,20 +45,20 @@ export class CropsService {
   }
 
   async update(id: string, dto: UpdateCropDto): Promise<Crop> {
-    this.logger.info('Updating crop', { context: 'CropsService', id });
+    this.logger.log('Updating crop', { context: 'CropsService', id });
     const crop = await this.findOne(id);
 
     Object.assign(crop, dto);
 
     const updated = await this.cropRepository.save(crop);
-    this.logger.info('Crop updated', { context: 'CropsService', id });
+    this.logger.log('Crop updated', { context: 'CropsService', id });
     return updated;
   }
 
   async remove(id: string): Promise<void> {
-    this.logger.info('Deleting crop', { context: 'CropsService', id });
+    this.logger.log('Deleting crop', { context: 'CropsService', id });
     const crop = await this.findOne(id);
     await this.cropRepository.remove(crop);
-    this.logger.info('Crop deleted', { context: 'CropsService', id });
+    this.logger.log('Crop deleted', { context: 'CropsService', id });
   }
 }

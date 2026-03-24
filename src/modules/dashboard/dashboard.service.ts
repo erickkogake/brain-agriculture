@@ -25,7 +25,7 @@ export class DashboardService {
   ) {}
 
   async getStats(): Promise<DashboardStats> {
-    this.logger.info('Fetching dashboard stats', { context: 'DashboardService' });
+    this.logger.log('Fetching dashboard stats', { context: 'DashboardService' });
 
     const [totalProducers, farms, crops] = await Promise.all([
       this.producerRepository.count(),

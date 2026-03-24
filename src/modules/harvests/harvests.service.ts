@@ -16,14 +16,14 @@ export class HarvestsService {
   ) {}
 
   async create(dto: CreateHarvestDto): Promise<Harvest> {
-    this.logger.info('Creating harvest', { context: 'HarvestsService', name: dto.name });
+    this.logger.log('Creating harvest', { context: 'HarvestsService', name: dto.name });
 
     await this.farmsService.findOne(dto.farmId);
 
     const harvest = this.harvestRepository.create(dto);
     const saved = await this.harvestRepository.save(harvest);
 
-    this.logger.info('Harvest created', { context: 'HarvestsService', id: saved.id });
+    this.logger.log('Harvest created', { context: 'HarvestsService', id: saved.id });
     return saved;
   }
 
@@ -45,20 +45,20 @@ export class HarvestsService {
   }
 
   async update(id: string, dto: UpdateHarvestDto): Promise<Harvest> {
-    this.logger.info('Updating harvest', { context: 'HarvestsService', id });
+    this.logger.log('Updating harvest', { context: 'HarvestsService', id });
     const harvest = await this.findOne(id);
 
     Object.assign(harvest, dto);
 
     const updated = await this.harvestRepository.save(harvest);
-    this.logger.info('Harvest updated', { context: 'HarvestsService', id });
+    this.logger.log('Harvest updated', { context: 'HarvestsService', id });
     return updated;
   }
 
   async remove(id: string): Promise<void> {
-    this.logger.info('Deleting harvest', { context: 'HarvestsService', id });
+    this.logger.log('Deleting harvest', { context: 'HarvestsService', id });
     const harvest = await this.findOne(id);
     await this.harvestRepository.remove(harvest);
-    this.logger.info('Harvest deleted', { context: 'HarvestsService', id });
+    this.logger.log('Harvest deleted', { context: 'HarvestsService', id });
   }
 }

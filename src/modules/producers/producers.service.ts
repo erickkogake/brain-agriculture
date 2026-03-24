@@ -22,7 +22,7 @@ export class ProducersService {
   ) {}
 
   async create(dto: CreateProducerDto): Promise<Producer> {
-    this.logger.info('Creating producer', { context: 'ProducersService' });
+    this.logger.log('Creating producer', { context: 'ProducersService' });
 
     const cleaned = dto.document.replace(/\D/g, '');
     const existing = await this.producerRepository.findByDocument(cleaned);
@@ -33,17 +33,17 @@ export class ProducersService {
     const producer = this.producerFactory.build(dto.document, dto.name);
     const saved = await this.producerRepository.save(producer);
 
-    this.logger.info('Producer created', { context: 'ProducersService', id: saved.id });
+    this.logger.log('Producer created', { context: 'ProducersService', id: saved.id });
     return saved;
   }
 
   async findAll(): Promise<Producer[]> {
-    this.logger.info('Fetching all producers', { context: 'ProducersService' });
+    this.logger.log('Fetching all producers', { context: 'ProducersService' });
     return this.producerRepository.findAll();
   }
 
   async findOne(id: string): Promise<Producer> {
-    this.logger.info('Fetching producer', { context: 'ProducersService', id });
+    this.logger.log('Fetching producer', { context: 'ProducersService', id });
     const producer = await this.producerRepository.findById(id);
     if (!producer) {
       throw new NotFoundException(`Produtor com ID ${id} não encontrado.`);
@@ -52,7 +52,7 @@ export class ProducersService {
   }
 
   async update(id: string, dto: UpdateProducerDto): Promise<Producer> {
-    this.logger.info('Updating producer', { context: 'ProducersService', id });
+    this.logger.log('Updating producer', { context: 'ProducersService', id });
     const producer = await this.findOne(id);
 
     if (dto.document) {
@@ -68,14 +68,14 @@ export class ProducersService {
     if (dto.name) producer.name = dto.name;
 
     const updated = await this.producerRepository.save(producer);
-    this.logger.info('Producer updated', { context: 'ProducersService', id });
+    this.logger.log('Producer updated', { context: 'ProducersService', id });
     return updated;
   }
 
   async remove(id: string): Promise<void> {
-    this.logger.info('Deleting producer', { context: 'ProducersService', id });
+    this.logger.log('Deleting producer', { context: 'ProducersService', id });
     const producer = await this.findOne(id);
     await this.producerRepository.remove(producer);
-    this.logger.info('Producer deleted', { context: 'ProducersService', id });
+    this.logger.log('Producer deleted', { context: 'ProducersService', id });
   }
 }

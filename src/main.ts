@@ -47,7 +47,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Brain Agriculture API')
     .setDescription(
-      `API para gerenciamento de produtores rurais. Permite cadastro e gestão de produtores, fazendas, safras e culturas plantadas.`,
+      `API para gerenciamento de produtores rurais.`,
     )
     .setVersion('1.0')
     .addTag('producers', 'Gerenciamento de produtores rurais')
@@ -67,4 +67,4 @@ async function bootstrap() {
   logger.log(`Swagger docs available at http://localhost:${port}/docs`, 'Bootstrap');
 }
 
-bootstrap();
+void bootstrap();

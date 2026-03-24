@@ -60,7 +60,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
         database: configService.get('DB_DATABASE', 'brain_agriculture'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') !== 'production',
+        synchronize: true,
         logging: configService.get('NODE_ENV') === 'development',
         autoLoadEntities: true,
       }),

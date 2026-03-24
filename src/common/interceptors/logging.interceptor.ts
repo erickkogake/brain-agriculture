@@ -17,7 +17,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const { method, url, body, params, query } = req;
     const now = Date.now();
 
-    this.logger.info(`Incoming Request`, {
+    this.logger.log(`Incoming Request`, {
       context: 'LoggingInterceptor',
       method,
       url,
@@ -30,7 +30,7 @@ export class LoggingInterceptor implements NestInterceptor {
       tap({
         next: () => {
           const res = context.switchToHttp().getResponse();
-          this.logger.info(`Outgoing Response`, {
+          this.logger.log(`Outgoing Response`, {
             context: 'LoggingInterceptor',
             method,
             url,
