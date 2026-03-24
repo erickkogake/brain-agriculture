@@ -6,7 +6,7 @@ import { CropRepository } from '../repositories/crop.repository';
 import { Crop, CropType } from '../entities/crop.entity';
 import { HarvestsService } from '../../harvests/harvests.service';
 
-const mockLogger = { info: jest.fn(), error: jest.fn(), warn: jest.fn() };
+const mockLogger = { log: jest.fn(), error: jest.fn(), warn: jest.fn() };
 
 const mockHarvest = {
   id: 'harvest-uuid-1',
@@ -114,7 +114,7 @@ describe('CropsService', () => {
 
       await service.create(dto);
 
-      expect(mockLogger.info).toHaveBeenCalledWith(
+      expect(mockLogger.log).toHaveBeenCalledWith(
         'Creating crop',
         expect.objectContaining({ context: 'CropsService', type: CropType.SOJA }),
       );

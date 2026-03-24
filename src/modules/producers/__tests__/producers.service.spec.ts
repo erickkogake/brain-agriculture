@@ -6,7 +6,7 @@ import { ProducerRepository } from '../repositories/producer.repository';
 import { ProducerFactory } from '../factories/producer.factory';
 import { Producer, DocumentType } from '../entities/producer.entity';
 
-const mockLogger = { info: jest.fn(), error: jest.fn(), warn: jest.fn() };
+const mockLogger = { log: jest.fn(), error: jest.fn(), warn: jest.fn() };
 
 const mockProducer: Producer = {
   id: 'uuid-1',

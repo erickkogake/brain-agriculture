@@ -6,7 +6,7 @@ import { HarvestRepository } from '../repositories/harvest.repository';
 import { Harvest } from '../entities/harvest.entity';
 import { FarmsService } from '../../farms/farms.service';
 
-const mockLogger = { info: jest.fn(), error: jest.fn(), warn: jest.fn() };
+const mockLogger = { log: jest.fn(), error: jest.fn(), warn: jest.fn() };
 
 const mockFarm = {
   id: 'farm-uuid-1',
@@ -92,7 +92,7 @@ describe('HarvestsService', () => {
 
       await service.create(dto);
 
-      expect(mockLogger.info).toHaveBeenCalledWith(
+      expect(mockLogger.log).toHaveBeenCalledWith(
         'Creating harvest',
         expect.objectContaining({ context: 'HarvestsService' }),
       );

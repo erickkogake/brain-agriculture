@@ -7,7 +7,7 @@ import { Farm } from '../../farms/entities/farm.entity';
 import { Crop, CropType } from '../../crops/entities/crop.entity';
 import { Producer } from '../../producers/entities/producer.entity';
 
-const mockLogger = { info: jest.fn(), error: jest.fn() };
+const mockLogger = { log: jest.fn(), error: jest.fn() };
 
 const mockFarms = [
   { id: '1', state: 'SP', totalArea: 1000, arableArea: 600, vegetationArea: 300 },

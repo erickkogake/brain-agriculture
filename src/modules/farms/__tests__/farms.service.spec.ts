@@ -8,7 +8,7 @@ import { Farm } from '../entities/farm.entity';
 import { ProducersService } from '../../producers/producers.service';
 import { DocumentType } from '../../producers/entities/producer.entity';
 
-const mockLogger = { info: jest.fn(), error: jest.fn(), warn: jest.fn() };
+const mockLogger = { log: jest.fn(), error: jest.fn(), warn: jest.fn() };
 
 const mockProducer = {
   id: 'producer-uuid-1',
