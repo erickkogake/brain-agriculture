@@ -90,16 +90,18 @@ Com a aplicação rodando, acesse **http://localhost:3000/docs** para a interfac
 
 ---
 
+## pgAdmin
+
+Acesse **http://localhost:5050** — login `admin@admin.com` / `admin`.
+
+Conexão com o banco:
+
+| Host | Port | Database | Username | Password |
+|---|---|---|---|---|
+| `localhost` | `5432` | `brain_agriculture` | `postgres` | `postgres` |
+
+---
+
 ## Variáveis de ambiente
 
 O arquivo `.env.example` contém todas as variáveis com seus valores padrão para desenvolvimento local.
-
-| Variável | Padrão |
-|---|---|
-| `PORT` | `3000` |
-| `DB_HOST` | `localhost` |
-| `DB_PORT` | `5432` |
-| `DB_USERNAME` | `postgres` |
-| `DB_PASSWORD` | `postgres` |
-| `DB_DATABASE` | `brain_agriculture` |
-| `LOG_LEVEL` | `debug` |
