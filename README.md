@@ -22,7 +22,7 @@ cd brain-agriculture
 docker-compose up -d
 
 # 3. Acesse
-# API:    http://localhost:3000/api/v1
+# API:     http://localhost:3000/api/v1
 # Swagger: http://localhost:3000/docs
 ```
 
@@ -99,6 +99,45 @@ Conexão com o banco:
 | Host | Port | Database | Username | Password |
 |---|---|---|---|---|
 | `localhost` | `5432` | `brain_agriculture` | `postgres` | `postgres` |
+
+---
+
+## Estrutura do projeto
+
+```
+src/
+├── common/
+│   ├── decorators/         # IsValidDocument (CPF/CNPJ)
+│   ├── filters/            # HttpExceptionFilter
+│   ├── interceptors/       # LoggingInterceptor, TransformInterceptor
+│   ├── interfaces/         # IApiResponse, IBaseRepository
+│   ├── strategies/         # CpfValidationStrategy, CnpjValidationStrategy, DocumentValidatorContext
+│   └── types/
+├── database/
+│   └── seeds/              # Dados de exemplo
+└── modules/
+    ├── producers/
+    │   ├── dto/
+    │   ├── entities/
+    │   ├── factories/       # ProducerFactory
+    │   ├── interfaces/
+    │   ├── mappers/         # ProducerMapper
+    │   ├── repositories/    # ProducerRepository
+    │   └── types/
+    ├── farms/               # mesma estrutura + FarmFactory, FarmMapper, FarmRepository
+    ├── harvests/            # mesma estrutura + HarvestMapper, HarvestRepository
+    ├── crops/               # mesma estrutura + CropMapper, CropRepository
+    └── dashboard/           # DashboardMapper
+```
+
+### Design Patterns
+
+| Pattern | Onde |
+|---|---|
+| **Strategy** | Validação de CPF/CNPJ — `CpfValidationStrategy`, `CnpjValidationStrategy`, `DocumentValidatorContext` |
+| **Repository** | Acesso ao banco — `ProducerRepository`, `FarmRepository`, `HarvestRepository`, `CropRepository` |
+| **Factory** | Criação de entidades — `ProducerFactory`, `FarmFactory` |
+| **Mapper** | Transformação entity → response — `ProducerMapper`, `FarmMapper`, `HarvestMapper`, `CropMapper`, `DashboardMapper` |
 
 ---
 
