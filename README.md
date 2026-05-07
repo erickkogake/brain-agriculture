@@ -22,7 +22,7 @@ cd brain-agriculture
 docker-compose up -d
 
 # 3. Acesse
-# API:     http://localhost:3000/api/v1
+# API:    http://localhost:3000/api/v1
 # Swagger: http://localhost:3000/docs
 ```
 
@@ -90,57 +90,16 @@ Com a aplicação rodando, acesse **http://localhost:3000/docs** para a interfac
 
 ---
 
-## pgAdmin
-
-Acesse **http://localhost:5050** — login `admin@admin.com` / `admin`.
-
-Conexão com o banco:
-
-| Host | Port | Database | Username | Password |
-|---|---|---|---|---|
-| `localhost` | `5432` | `brain_agriculture` | `postgres` | `postgres` |
-
----
-
-## Estrutura do projeto
-
-```
-src/
-├── common/
-│   ├── decorators/         # IsValidDocument (CPF/CNPJ)
-│   ├── filters/            # HttpExceptionFilter
-│   ├── interceptors/       # LoggingInterceptor, TransformInterceptor
-│   ├── interfaces/         # IApiResponse, IBaseRepository
-│   ├── strategies/         # CpfValidationStrategy, CnpjValidationStrategy, DocumentValidatorContext
-│   └── types/
-├── database/
-│   └── seeds/              # Dados de exemplo
-└── modules/
-    ├── producers/
-    │   ├── dto/
-    │   ├── entities/
-    │   ├── factories/       # ProducerFactory
-    │   ├── interfaces/
-    │   ├── mappers/         # ProducerMapper
-    │   ├── repositories/    # ProducerRepository
-    │   └── types/
-    ├── farms/               # mesma estrutura + FarmFactory, FarmMapper, FarmRepository
-    ├── harvests/            # mesma estrutura + HarvestMapper, HarvestRepository
-    ├── crops/               # mesma estrutura + CropMapper, CropRepository
-    └── dashboard/           # DashboardMapper
-```
-
-### Design Patterns
-
-| Pattern | Onde |
-|---|---|
-| **Strategy** | Validação de CPF/CNPJ — `CpfValidationStrategy`, `CnpjValidationStrategy`, `DocumentValidatorContext` |
-| **Repository** | Acesso ao banco — `ProducerRepository`, `FarmRepository`, `HarvestRepository`, `CropRepository` |
-| **Factory** | Criação de entidades — `ProducerFactory`, `FarmFactory` |
-| **Mapper** | Transformação entity → response — `ProducerMapper`, `FarmMapper`, `HarvestMapper`, `CropMapper`, `DashboardMapper` |
-
----
-
 ## Variáveis de ambiente
 
 O arquivo `.env.example` contém todas as variáveis com seus valores padrão para desenvolvimento local.
+
+| Variável | Padrão |
+|---|---|
+| `PORT` | `3000` |
+| `DB_HOST` | `localhost` |
+| `DB_PORT` | `5432` |
+| `DB_USERNAME` | `postgres` |
+| `DB_PASSWORD` | `postgres` |
+| `DB_DATABASE` | `brain_agriculture` |
+| `LOG_LEVEL` | `debug` |
